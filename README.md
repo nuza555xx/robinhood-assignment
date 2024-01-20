@@ -32,6 +32,30 @@ $ docker-compose up -d
 
 ```
 
+## Seed data
+
+- [ ] Run docker swarm or mongodb container
+
+```bash
+# docker exec mongodb
+$ docker exec -it -w /root mongodb /bin/bash
+```
+
+```bash
+# auth and connect
+$ mongosh --host CONTAINER_NAME --port PORT --username USERNAME --password PASSWORD --authenticationDatabase admin TARGET_DB
+```
+
+```bash
+# seed role
+$ db.roles.insertMany([{ "label": "Administrator", "slug": "administrator" }, { "label": "User", "slug": "user" }])
+```
+
+```bash
+# exit db
+$ exit
+```
+
 ## Running the app on localhost
 
 - [ ] Build the app to docker-compose
