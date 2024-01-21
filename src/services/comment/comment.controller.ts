@@ -17,20 +17,29 @@ import {
   GetCommentQuery,
   UpdateCommentDto,
 } from './comment.dto';
-import { Auth, Authorize, Authorizer } from '@decorators';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiPaginatedResponse, Auth, Authorize, Authorizer } from '@decorators';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { CommentResponse } from './comment.entitiy';
 
 @Authorize()
 @ApiTags('comments')
+@ApiResponse({
+  status: HttpStatus.UNAUTHORIZED,
+  description: 'Missing authorization header.',
+})
 @Controller('comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  @ApiPaginatedResponse(CommentResponse)
   @Get()
-  comments(@Query() query: GetCommentQuery): Promise<any> {
+  comments(@Query() query: GetCommentQuery) {
     return this.commentService.comments(query);
   }
 
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+  })
   @Post('create')
   @HttpCode(HttpStatus.NO_CONTENT)
   createComment(
@@ -40,6 +49,13 @@ export class CommentController {
     return this.commentService.createComment(body, account.id);
   }
 
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Can not access the data. Please try again.',
+  })
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   updateComment(
@@ -50,6 +66,13 @@ export class CommentController {
     return this.commentService.updateComment(id, body, account.id);
   }
 
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Can not access the data. Please try again.',
+  })
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteComment(@Auth() { account }: Authorizer, @Param() { id }: GetIdParam) {

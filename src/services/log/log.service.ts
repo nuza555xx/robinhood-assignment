@@ -9,6 +9,7 @@ import {
 } from '@repositories';
 import { Pagination } from '@utils';
 import { Sorting } from '@enums';
+import { ChangelogResponse } from './log.entitiy';
 
 @Injectable()
 export class ChangelogService {
@@ -63,7 +64,12 @@ export class ChangelogService {
       }),
     );
 
-    const response = Pagination.paginationResponse(logs, skip, limit, logCount);
+    const response = Pagination.paginationResponse<ChangelogResponse>(
+      logs,
+      skip,
+      limit,
+      logCount,
+    );
 
     return response;
   }

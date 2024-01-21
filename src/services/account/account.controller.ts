@@ -1,9 +1,10 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountsDto, LoginDto } from './account.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '@guards';
 import { Authorize } from '@decorators';
+import { LoginResponse } from './account.entitiy';
 
 @Authorize()
 @ApiTags('accounts')
@@ -11,6 +12,17 @@ import { Authorize } from '@decorators';
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'This username already exists. Please try again.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Missing authorization header.',
+  })
   @Post('create')
   @HttpCode(HttpStatus.NO_CONTENT)
   createAccount(@Body() body: CreateAccountsDto) {
@@ -18,6 +30,18 @@ export class AccountController {
   }
 
   @Public()
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Username or password is invalid. Please try again.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Username or password is invalid. Please try again.',
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: LoginResponse,
+  })
   @Post('login')
   login(@Body() body: LoginDto) {
     return this.accountService.login(body);

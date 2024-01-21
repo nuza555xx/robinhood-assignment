@@ -15,6 +15,7 @@ import {
 import { Pagination } from '@utils';
 import { Exception } from '@exception';
 import { Sorting } from '@enums';
+import { InterviewResponse } from './interview.entitiy';
 
 @Injectable()
 export class InterviewService {
@@ -86,7 +87,7 @@ export class InterviewService {
       }),
     );
 
-    const response = Pagination.paginationResponse(
+    const response = Pagination.paginationResponse<InterviewResponse>(
       interviews,
       skip,
       limit,

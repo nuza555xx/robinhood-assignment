@@ -93,6 +93,7 @@ export class GetCommentQuery {
   @ApiProperty({
     name: 'sort',
     example: null,
+    enum: Sorting,
     description: 'This is a optional property',
     required: false,
   })

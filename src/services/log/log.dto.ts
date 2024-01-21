@@ -34,11 +34,10 @@ export class GetChangelogQuery {
   @ApiProperty({
     name: 'sort',
     example: null,
+    enum: Sorting,
     description: 'This is a optional property',
     required: false,
   })
-  @IsOptional()
-  @IsString()
   sort?: string;
 
   @ApiProperty({

@@ -32,6 +32,12 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "400": {
+            "description": "This username already exists. Please try again."
+          },
+          "401": {
+            "description": "Missing authorization header."
           }
         },
         "tags": [
@@ -59,8 +65,18 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Username or password is invalid. Please try again."
           }
         },
         "tags": [
@@ -119,6 +135,10 @@
             "example": null,
             "description": "This is a optional property",
             "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
               "type": "string"
             }
           },
@@ -145,7 +165,31 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponse"
+                    },
+                    {
+                      "properties": {
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/InterviewResponse"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing authorization header."
           }
         },
         "tags": [
@@ -175,7 +219,20 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing authorization header."
+          },
+          "404": {
+            "description": "Not fount data. Please try again."
           }
         },
         "tags": [
@@ -214,6 +271,12 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Missing authorization header."
+          },
+          "404": {
+            "description": "Not fount data. Please try again."
           }
         },
         "tags": [
@@ -243,6 +306,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Missing authorization header."
           }
         },
         "tags": [
@@ -273,6 +339,12 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Missing authorization header."
+          },
+          "404": {
+            "description": "Not fount data. Please try again."
           }
         },
         "tags": [
@@ -316,6 +388,10 @@
             "example": null,
             "description": "This is a optional property",
             "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
               "type": "string"
             }
           },
@@ -342,7 +418,31 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponse"
+                    },
+                    {
+                      "properties": {
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CommentResponse"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing authorization header."
           }
         },
         "tags": [
@@ -372,6 +472,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Missing authorization header."
           }
         },
         "tags": [
@@ -412,6 +515,12 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Missing authorization header."
+          },
+          "403": {
+            "description": "Can not access the data. Please try again."
           }
         },
         "tags": [
@@ -440,6 +549,12 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Missing authorization header."
+          },
+          "403": {
+            "description": "Can not access the data. Please try again."
           }
         },
         "tags": [
@@ -483,6 +598,10 @@
             "example": null,
             "description": "This is a optional property",
             "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
               "type": "string"
             }
           },
@@ -509,7 +628,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangelogPaginationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing authorization header."
           }
         },
         "tags": [
@@ -610,6 +739,98 @@
           "password"
         ]
       },
+      "AccountResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "_id",
+          "displayName",
+          "avatar"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "account": {
+            "$ref": "#/components/schemas/AccountResponse"
+          }
+        },
+        "required": [
+          "accessToken",
+          "account"
+        ]
+      },
+      "Meta": {
+        "type": "object",
+        "properties": {
+          "previous": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number"
+          },
+          "resultCount": {
+            "type": "number"
+          },
+          "resultTotal": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "previous",
+          "next",
+          "resultCount",
+          "resultTotal"
+        ]
+      },
+      "PaginationResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "required": [
+          "meta"
+        ]
+      },
+      "InterviewResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "_id",
+          "title",
+          "createdAt",
+          "createdBy"
+        ]
+      },
       "CreateInterviewDto": {
         "type": "object",
         "properties": {
@@ -620,7 +841,7 @@
           },
           "description": {
             "type": "string",
-            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut\n      dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip\n      ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore\n      eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
             "description": "This is a required property"
           },
           "status": {
@@ -647,6 +868,7 @@
           },
           "description": {
             "type": "string",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
             "description": "This is a optional property"
           },
           "status": {
@@ -659,6 +881,30 @@
             ]
           }
         }
+      },
+      "CommentResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "_id",
+          "content",
+          "createdAt",
+          "createdBy"
+        ]
       },
       "CreateCommentDto": {
         "type": "object",
@@ -704,6 +950,48 @@
             ]
           }
         }
+      },
+      "ChangelogResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "_id",
+          "title",
+          "createdAt",
+          "createdBy"
+        ]
+      },
+      "ChangelogPaginationResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangelogResponse"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "required": [
+          "results",
+          "meta"
+        ]
       }
     }
   }

@@ -14,6 +14,7 @@ import {
 import { Pagination } from '@utils';
 import { Exception } from '@exception';
 import { CommentStatus, Sorting } from '@enums';
+import { CommentResponse } from './comment.entitiy';
 
 @Injectable()
 export class CommentService {
@@ -82,7 +83,7 @@ export class CommentService {
       }),
     );
 
-    const response = Pagination.paginationResponse(
+    const response = Pagination.paginationResponse<CommentResponse>(
       comments,
       skip,
       limit,
