@@ -77,6 +77,9 @@
           },
           "400": {
             "description": "Username or password is invalid. Please try again."
+          },
+          "401": {
+            "description": "Missing authorization header."
           }
         },
         "tags": [
@@ -188,6 +191,9 @@
               }
             }
           },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
+          },
           "401": {
             "description": "Missing authorization header."
           }
@@ -227,6 +233,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
           },
           "401": {
             "description": "Missing authorization header."
@@ -272,6 +281,9 @@
           "204": {
             "description": ""
           },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
+          },
           "401": {
             "description": "Missing authorization header."
           },
@@ -307,6 +319,9 @@
           "204": {
             "description": ""
           },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
+          },
           "401": {
             "description": "Missing authorization header."
           }
@@ -339,6 +354,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
           },
           "401": {
             "description": "Missing authorization header."
@@ -441,6 +459,9 @@
               }
             }
           },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
+          },
           "401": {
             "description": "Missing authorization header."
           }
@@ -472,6 +493,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
           },
           "401": {
             "description": "Missing authorization header."
@@ -516,6 +540,9 @@
           "204": {
             "description": ""
           },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
+          },
           "401": {
             "description": "Missing authorization header."
           },
@@ -549,6 +576,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
           },
           "401": {
             "description": "Missing authorization header."
@@ -636,6 +666,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "API rate limit exceeded. Please waiting."
           },
           "401": {
             "description": "Missing authorization header."

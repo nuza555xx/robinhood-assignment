@@ -5,6 +5,7 @@ import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '@guards';
 import { Authorize } from '@decorators';
 import { LoginResponse } from './account.entitiy';
+import { ErrorsCode } from '@exception';
 
 @Authorize()
 @ApiTags('accounts')
@@ -17,11 +18,11 @@ export class AccountController {
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'This username already exists. Please try again.',
+    description: ErrorsCode['USERNAME_IS_EXIST'].message,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Missing authorization header.',
+    description: ErrorsCode['MISSING_AUTHORIZATION_HEADERS'].message,
   })
   @Post('create')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -32,15 +33,19 @@ export class AccountController {
   @Public()
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'Username or password is invalid. Please try again.',
+    description: ErrorsCode['USERNAME_OR_PASSWORD_INVALID'].message,
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'Username or password is invalid. Please try again.',
+    description: ErrorsCode['USERNAME_OR_PASSWORD_INVALID'].message,
   })
   @ApiOkResponse({
     status: HttpStatus.OK,
     type: LoginResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: ErrorsCode['RATE_LIMIT_REQUEST'].message,
   })
   @Post('login')
   login(@Body() body: LoginDto) {

@@ -20,12 +20,13 @@ import {
 import { ApiPaginatedResponse, Auth, Authorize, Authorizer } from '@decorators';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { CommentResponse } from './comment.entitiy';
+import { ErrorsCode } from '@exception';
 
 @Authorize()
 @ApiTags('comments')
 @ApiResponse({
-  status: HttpStatus.UNAUTHORIZED,
-  description: 'Missing authorization header.',
+  status: HttpStatus.BAD_REQUEST,
+  description: ErrorsCode['RATE_LIMIT_REQUEST'].message,
 })
 @Controller('comments')
 export class CommentController {
@@ -53,8 +54,8 @@ export class CommentController {
     status: HttpStatus.NO_CONTENT,
   })
   @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'Can not access the data. Please try again.',
+    status: ErrorsCode['FORBIDDEN'].statusCode,
+    description: ErrorsCode['FORBIDDEN'].message,
   })
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -70,8 +71,8 @@ export class CommentController {
     status: HttpStatus.NO_CONTENT,
   })
   @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'Can not access the data. Please try again.',
+    status: ErrorsCode['FORBIDDEN'].statusCode,
+    description: ErrorsCode['FORBIDDEN'].message,
   })
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

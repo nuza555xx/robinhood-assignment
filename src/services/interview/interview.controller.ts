@@ -19,12 +19,13 @@ import {
 import { Auth, Authorize, Authorizer, ApiPaginatedResponse } from '@decorators';
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InterviewResponse } from './interview.entitiy';
+import { ErrorsCode } from '@exception';
 
 @Authorize()
 @ApiTags('interviews')
 @ApiResponse({
-  status: HttpStatus.UNAUTHORIZED,
-  description: 'Missing authorization header.',
+  status: HttpStatus.BAD_REQUEST,
+  description: ErrorsCode['RATE_LIMIT_REQUEST'].message,
 })
 @Controller('interviews')
 export class InterviewController {
@@ -41,8 +42,8 @@ export class InterviewController {
     type: InterviewResponse,
   })
   @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Not fount data. Please try again.',
+    status: ErrorsCode['NOT_FOUND_DATA'].statusCode,
+    description: ErrorsCode['NOT_FOUND_DATA'].message,
   })
   @Get(':id')
   interview(@Param() { id }: GetIdParam): Promise<any> {
@@ -65,8 +66,8 @@ export class InterviewController {
     status: HttpStatus.NO_CONTENT,
   })
   @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Not fount data. Please try again.',
+    status: ErrorsCode['NOT_FOUND_DATA'].statusCode,
+    description: ErrorsCode['NOT_FOUND_DATA'].message,
   })
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -82,8 +83,8 @@ export class InterviewController {
     status: HttpStatus.NO_CONTENT,
   })
   @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Not fount data. Please try again.',
+    status: ErrorsCode['NOT_FOUND_DATA'].statusCode,
+    description: ErrorsCode['NOT_FOUND_DATA'].message,
   })
   @Patch('archive/:id')
   @HttpCode(HttpStatus.NO_CONTENT)

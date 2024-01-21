@@ -4,12 +4,13 @@ import { GetChangelogQuery } from './log.dto';
 import { Authorize, ApiPaginatedResponse } from '@decorators';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ChangelogPaginationResponse, ChangelogResponse } from './log.entitiy';
+import { ErrorsCode } from '@exception';
 
 @Authorize()
 @ApiTags('logs')
 @ApiResponse({
-  status: HttpStatus.UNAUTHORIZED,
-  description: 'Missing authorization header.',
+  status: HttpStatus.BAD_REQUEST,
+  description: ErrorsCode['RATE_LIMIT_REQUEST'].message,
 })
 @Controller('logs')
 export class ChangelogController {
