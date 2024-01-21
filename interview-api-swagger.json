@@ -1,0 +1,696 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/accounts/create": {
+      "post": {
+        "operationId": "AccountController_createAccount",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAccountsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "accounts"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/accounts/login": {
+      "post": {
+        "operationId": "AccountController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "accounts"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/interviews": {
+      "get": {
+        "operationId": "InterviewController_interviews",
+        "parameters": [
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "enum": [
+                "todo",
+                "inprogress",
+                "done"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "next",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "interviews"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/interviews/{id}": {
+      "get": {
+        "operationId": "InterviewController_interview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "example": null,
+            "description": "This is a required property",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "interviews"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "InterviewController_updateInterview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "example": null,
+            "description": "This is a required property",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInterviewDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "interviews"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/interviews/create": {
+      "post": {
+        "operationId": "InterviewController_createInterview",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInterviewDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "interviews"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/interviews/archive/{id}": {
+      "patch": {
+        "operationId": "InterviewController_archive",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "example": null,
+            "description": "This is a required property",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "interviews"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/comments": {
+      "get": {
+        "operationId": "CommentController_comments",
+        "parameters": [
+          {
+            "name": "refBy",
+            "required": true,
+            "in": "query",
+            "example": null,
+            "description": "This is a required property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "next",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "comments"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/comments/create": {
+      "post": {
+        "operationId": "CommentController_createComment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "comments"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/comments/{id}": {
+      "patch": {
+        "operationId": "CommentController_updateComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "example": null,
+            "description": "This is a required property",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "comments"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "CommentController_deleteComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "example": null,
+            "description": "This is a required property",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "comments"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    },
+    "/api/logs": {
+      "get": {
+        "operationId": "ChangelogController_logs",
+        "parameters": [
+          {
+            "name": "refBy",
+            "required": true,
+            "in": "query",
+            "example": null,
+            "description": "This is a required property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "next",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "This is a optional property",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "logs"
+        ],
+        "security": [
+          {
+            "JSON Web Token Authorization": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Interview API",
+    "description": "desc",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "JSON Web Token Authorization": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "name": "JSON Web Token",
+        "description": "Enter JSON Web Token",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "AvatarDto": {
+        "type": "object",
+        "properties": {
+          "thumbnail": {
+            "type": "string",
+            "example": "http://via.placeholder.com/256x256",
+            "description": "This is a optional property"
+          },
+          "original": {
+            "type": "string",
+            "example": "http://via.placeholder.com/1024x1024",
+            "description": "This is a optional property"
+          }
+        }
+      },
+      "CreateAccountsDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "example",
+            "description": "This is a required property"
+          },
+          "password": {
+            "type": "string",
+            "example": "$12345678Ab",
+            "description": "This is a required property"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "example",
+            "description": "This is a required property"
+          },
+          "avatar": {
+            "description": "This is a optional property",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AvatarDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "displayName"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "admin",
+            "description": "This is a required property"
+          },
+          "password": {
+            "type": "string",
+            "example": "$12345678Ab",
+            "description": "This is a required property"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "CreateInterviewDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "The standard Lorem Ipsum passage, used since the 1500s",
+            "description": "This is a required property"
+          },
+          "description": {
+            "type": "string",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut\n      dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip\n      ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore\n      eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia",
+            "description": "This is a required property"
+          },
+          "status": {
+            "type": "string",
+            "description": "This is a optional property",
+            "enum": [
+              "todo",
+              "inprogress",
+              "done"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "description"
+        ]
+      },
+      "UpdateInterviewDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "This is a optional property"
+          },
+          "description": {
+            "type": "string",
+            "description": "This is a optional property"
+          },
+          "status": {
+            "type": "string",
+            "description": "This is a optional property",
+            "enum": [
+              "todo",
+              "inprogress",
+              "done"
+            ]
+          }
+        }
+      },
+      "CreateCommentDto": {
+        "type": "object",
+        "properties": {
+          "refBy": {
+            "type": "string",
+            "example": null,
+            "description": "This is a required property"
+          },
+          "content": {
+            "type": "string",
+            "example": "The standard Lorem Ipsum passage, used since the 1500s",
+            "description": "This is a required property"
+          },
+          "status": {
+            "type": "string",
+            "description": "This is a optional property",
+            "enum": [
+              "publish",
+              "deleted"
+            ]
+          }
+        },
+        "required": [
+          "refBy",
+          "content"
+        ]
+      },
+      "UpdateCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "The standard Lorem Ipsum passage, used since the 1500s",
+            "description": "This is a optional property"
+          },
+          "status": {
+            "type": "string",
+            "description": "This is a optional property",
+            "enum": [
+              "publish",
+              "deleted"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

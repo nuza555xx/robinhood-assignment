@@ -1,4 +1,4 @@
-# Entity-Relationship Diagram for Application
+# ER Diagram for Application
 
 This diagram illustrates the relationships between key entities in application's data model.
 

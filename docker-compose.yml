@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 27017:27017
+
+  backend:
+    image: backend:latest
+    container_name: backend
+    depends_on:
+      - mongodb
+    # command: bash -c 'sleep 5 && mongoimport --host mongodb --db reach-engine --collection roles --type json --file /role.json --jsonArray'
+    env_file:
+      - .env
+    ports:
+      - 80:80
+    volumes:
+      - ./role.json:/role.json
