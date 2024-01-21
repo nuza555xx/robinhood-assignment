@@ -1,3 +1,7 @@
+# Docs website
+
+This site was built using [GitHub Pages](https://github.com/nuza555xx/robinhood-assignment/).
+
 # ER Diagram for Application
 
 This diagram illustrates the relationships between key entities in application's data model.
