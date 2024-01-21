@@ -5,8 +5,8 @@ import { JwtModule, RateLimitModule } from '@modules';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionFilter } from '@exception';
 import { LoggingInterceptor, ResponseInterceptor } from '@interceptor';
-import { AuthGuard } from '@guards';
 import { AppController } from './app.controller';
+import { AuthGuard } from '@guards';
 import { RateLimitGuard } from '@guards/rate-limit.guard';
 import { InterviewModule } from './services/interview/interview.module';
 import { AccountModule } from './services/account/account.module';
@@ -24,7 +24,7 @@ import { ChangelogModule } from './services/log/log.module';
     CommentModule,
     ChangelogModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
