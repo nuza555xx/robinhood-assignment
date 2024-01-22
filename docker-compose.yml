@@ -9,15 +9,50 @@ services:
     ports:
       - 27017:27017
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - ./redis/databases:/data
+      - ./redis/config/redis.conf:/etc/redis/redis.conf
+    command:
+      [
+        'redis-server',
+        '/etc/redis/redis.conf',
+        '--requirepass',
+        '${REDIS_PASSWORD}',
+      ]
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
   backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: backend:latest
     container_name: backend
+    healthcheck:
+      test: curl --fail http://localhost:80/health || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     depends_on:
       - mongodb
-    # command: bash -c 'sleep 5 && mongoimport --host mongodb --db reach-engine --collection roles --type json --file /role.json --jsonArray'
-    env_file:
-      - .env
+      - redis
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_DATABASE_NAME=${DB_DATABASE_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
+      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
+      - RATE_LIMIT_TTL=${RATE_LIMIT_TTL}
+      - RATE_LIMIT_COUNT=${RATE_LIMIT_COUNT}
     ports:
-      - 80:80
-    volumes:
-      - ./role.json:/role.json
+      - 8080:80
