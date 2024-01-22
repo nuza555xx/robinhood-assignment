@@ -1,13 +1,43 @@
 {
   "$schema": "https://json.schemastore.org/swcrc",
   "sourceMaps": true,
+  "module": {
+    "type": "commonjs",
+    "strict": true
+  },
   "jsc": {
+    "target": "es2017",
     "parser": {
       "syntax": "typescript",
-      "decorators": true,
-      "dynamicImport": true
+      "decorators": true
     },
-    "baseUrl": "./"
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
+    },
+    "keepClassNames": true,
+    "baseUrl": "./",
+    "paths": {
+      "@app/module": ["src/app.module.ts"],
+      "@configs": ["src/libs/configs"],
+      "@configs/*": ["src/libs/configs/*"],
+      "@exception": ["src/libs/exception"],
+      "@exception/*": ["src/libs/exception/*"],
+      "@enums": ["src/libs/enums"],
+      "@enums/*": ["src/libs/enums/*"],
+      "@decorators": ["src/libs/decorators"],
+      "@decorators/*": ["src/libs/decorators/*"],
+      "@interceptor": ["src/libs/interceptors"],
+      "@interceptor/*": ["src/libs/interceptors/*"],
+      "@guards": ["src/libs/guards"],
+      "@guards/*": ["src/libs/guards/*"],
+      "@modules": ["src/libs/modules"],
+      "@modules/*": ["src/libs/modules/*"],
+      "@utils": ["src/libs/utils"],
+      "@utils/*": ["src/libs/utils/*"],
+      "@repositories": ["src/repositories"],
+      "@repositories/*": ["src/repositories/*"]
+    }
   },
-  "minify": false
+  "minify": true
 }
