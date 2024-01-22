@@ -12,6 +12,7 @@ import { CreateAccountsDto } from './account.dto';
 import { Hashing } from '@utils';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import { Exception } from '@exception';
 describe('AccountService', () => {
   let moduleRef: TestingModule;
   let mongod: MongoMemoryServer;
@@ -19,7 +20,7 @@ describe('AccountService', () => {
   let accountRepo: Repository<Account>;
 
   beforeAll(async () => {
-    const mongod = await MongoMemoryServer.create();
+    mongod = await MongoMemoryServer.create();
     const uri = mongod.getUri();
 
     moduleRef = await Test.createTestingModule({
@@ -52,55 +53,53 @@ describe('AccountService', () => {
   });
 
   afterAll(async () => {
+    await mongod.stop();
     await moduleRef.close();
   });
 
   describe('createAccount', () => {
+    const createAccountDto: CreateAccountsDto = {
+      username: 'test_user',
+      displayName: 'Test User',
+      password: 'test_password',
+    };
+
     it('should create an account', async () => {
-      const createAccountDto: CreateAccountsDto = {
-        // provide required data for testing
-        username: 'testuser',
-        displayName: 'Test User',
-        password: 'testpassword',
-      };
+      jest
+        .spyOn(accountRepo, 'transaction')
+        .mockImplementation(async (fn, ...args) => {
+          fn(...args);
+        });
 
       jest
-        .spyOn(Hashing, 'hash')
-        .mockImplementation((password: string) => password);
+        .spyOn(accountRepo, 'insertOne')
+        .mockResolvedValue(createAccountDto as any);
 
-      // // Mocking the behavior of accountRepo.exists and accountRepo.insertOne
-      // (accountRepo.exists as jest.Mock).mockResolvedValue(false);
-      // (accountRepo.insertOne as jest.Mock).mockResolvedValue(true);
+      jest.spyOn(accountRepo, 'exists').mockResolvedValue(false);
+
+      jest.spyOn(Hashing, 'hash').mockResolvedValue('hash_password');
 
       await accountService.createAccount(createAccountDto);
 
-      // // Expectations based on your implementation
-      // expect(accountRepo.transaction).toHaveBeenCalledTimes(1);
-      // expect(Hashing.hash).toHaveBeenCalledWith(createAccountDto.password);
-      // expect(accountRepo.exists).toHaveBeenCalledWith({
-      //   $or: [
-      //     { username: createAccountDto.username },
-      //     { displayName: createAccountDto.displayName },
-      //   ],
-      // });
-      // expect(accountRepo.insertOne).toHaveBeenCalledWith(createAccountDto);
+      expect(accountRepo.transaction).toHaveBeenCalledTimes(1);
+      expect(Hashing.hash).toHaveBeenCalledTimes(1);
+
+      expect(accountRepo.exists).toHaveBeenCalledWith({
+        $or: [
+          { username: createAccountDto.username },
+          { displayName: createAccountDto.displayName },
+        ],
+      });
+      expect(accountRepo.insertOne).toHaveBeenCalledWith(createAccountDto);
     });
 
-    // it('should throw an exception if username is already taken', async () => {
-    //   const createAccountDto: CreateAccountsDto = {
-    //     // provide required data for testing
-    //     username: 'existinguser',
-    //     displayName: 'Existing User',
-    //     password: 'existingpassword',
-    //   };
+    it('should throw an exception if username is already taken', async () => {
+      jest.spyOn(accountRepo, 'exists').mockResolvedValue(true);
 
-    //   // Mocking the behavior of accountRepo.exists to simulate username already exists
-    //   (accountRepo.exists as jest.Mock).mockResolvedValue(true);
-
-    //   await expect(
-    //     accountService.createAccount(createAccountDto),
-    //   ).rejects.toThrow(Exception);
-    // });
+      await expect(
+        async () => await accountService.createAccount(createAccountDto),
+      ).rejects.toThrow(new Exception('USERNAME_IS_EXIST'));
+    });
 
     // it('should throw an exception if something goes wrong during insertion', async () => {
     //   const createAccountDto: CreateAccountsDto = {
