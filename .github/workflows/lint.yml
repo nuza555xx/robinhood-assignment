@@ -1,4 +1,4 @@
-name: Pull Request Checks
+name: Lint Check
 
 on:
   push:
@@ -6,21 +6,28 @@ on:
 
 jobs:
   lint:
-    name: Lint
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
         with:
-          node-version: '21'
-          cache: 'yarn'
-      - uses: actions/cache@v4
-        id: cache
+          path: |
+            node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: node_modules
-          key: ${{ runner.os }}-lint-${{ hashFiles('**/package-lock.json') }}
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install
-      - name: Lint Project
-        run: yarn run lint
+          node-version: 21
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint code
+        run: npm run lint
