@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "paths": {
+      "@app/module": ["src/app.module.ts"],
       "@configs": ["src/libs/configs"],
       "@configs/*": ["src/libs/configs/*"],
       "@exception": ["src/libs/exception"],
@@ -35,12 +36,8 @@
       "@modules/*": ["src/libs/modules/*"],
       "@utils": ["src/libs/utils"],
       "@utils/*": ["src/libs/utils/*"],
-
       "@repositories": ["src/repositories"],
       "@repositories/*": ["src/repositories/*"],
-
-      "@seed": ["src/libs/seed"],
-      "@seed/*": ["src/libs/seed/*"],
     },
   },
 }

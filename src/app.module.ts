@@ -6,8 +6,7 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionFilter } from '@exception';
 import { LoggingInterceptor, ResponseInterceptor } from '@interceptor';
 import { AppController } from './app.controller';
-import { AuthGuard } from '@guards';
-import { RateLimitGuard } from '@guards/rate-limit.guard';
+import { AuthGuard, RateLimitGuard } from '@guards';
 import { InterviewModule } from './services/interview/interview.module';
 import { AccountModule } from './services/account/account.module';
 import { CommentModule } from './services/comment/comment.module';
@@ -28,24 +27,29 @@ import { ChangelogModule } from './services/log/log.module';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useExisting: AuthGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: RateLimitGuard,
+      useExisting: RateLimitGuard,
     },
     {
       provide: APP_FILTER,
-      useClass: ExceptionFilter,
+      useExisting: ExceptionFilter,
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
+      useExisting: LoggingInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
+      useExisting: ResponseInterceptor,
     },
+    AuthGuard,
+    RateLimitGuard,
+    ExceptionFilter,
+    LoggingInterceptor,
+    ResponseInterceptor,
   ],
 })
 export class AppModule {}

@@ -9,7 +9,6 @@ import { JwtModule as JwtCoreModule } from '@nestjs/jwt';
     JwtCoreModule.registerAsync({
       useFactory: (configService: ConfigService) => {
         const config = configService.get<JwtConfig>(ConfigKeys.JWT);
-
         return {
           secret: config.secret,
           signOptions: { expiresIn: config.accessTokenExpiresIn },

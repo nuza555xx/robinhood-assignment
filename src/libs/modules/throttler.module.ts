@@ -12,5 +12,6 @@ import { ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
       inject: [ConfigService],
     }),
   ],
+  exports: [ThrottlerModule],
 })
 export class RateLimitModule {}

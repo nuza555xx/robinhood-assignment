@@ -1,9 +1,23 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "../",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": ".*\\.e2e-spec\\.ts$",
   "transform": {
     "^.+\\.(t|j)s?$": ["@swc/jest"]
+  },
+  "collectCoverageFrom": ["**/*.(t|j)s"],
+  "coverageDirectory": "../coverage",
+  "moduleNameMapper": {
+    "^@app/(.*)$": "<rootDir>/src/$1",
+    "@configs": "<rootDir>/src/libs/configs/$1",
+    "@exception": "<rootDir>/src/libs/exception/$1",
+    "@enums": "<rootDir>/src/libs/enums/$1",
+    "@decorators": "<rootDir>/src/libs/decorators/$1",
+    "@interceptor": "<rootDir>/src/libs/interceptors/$1",
+    "@guards": "<rootDir>/src/libs/guards/$1",
+    "@modules": "<rootDir>/src/libs/modules/$1",
+    "@utils": "<rootDir>/src/libs/utils/$1",
+    "@repositories": "<rootDir>/src/repositories/$1"
   }
 }

@@ -44,21 +44,24 @@ const modelDefinitions: ModelDefinition[] = [
   providers: [
     {
       provide: RepositoryProvider.ACCOUNT,
-      useClass: AccountImplement,
+      useExisting: AccountImplement,
     },
-
     {
       provide: RepositoryProvider.INTERVIEW,
-      useClass: InterviewImplement,
+      useExisting: InterviewImplement,
     },
     {
       provide: RepositoryProvider.COMMENT,
-      useClass: CommentImplement,
+      useExisting: CommentImplement,
     },
     {
       provide: RepositoryProvider.LOG,
-      useClass: ChangelogImplement,
+      useExisting: ChangelogImplement,
     },
+    AccountImplement,
+    InterviewImplement,
+    CommentImplement,
+    ChangelogImplement,
   ],
 
   exports: [
