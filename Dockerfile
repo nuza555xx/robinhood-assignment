@@ -1,5 +1,11 @@
 FROM node:21-alpine3.18
 
+ENV PNPM_HOME="/pnpm"
+
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+
 WORKDIR /app
 
 COPY ./dist .
@@ -10,6 +16,6 @@ ENV PORT=80
 
 EXPOSE ${PORT}
 
-RUN yarn install
+RUN pnpm install
 
-CMD ["yarn", "run", "start:prod"]
+CMD ["pnpm", "run", "start:prod"]
