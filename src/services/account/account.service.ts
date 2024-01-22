@@ -25,15 +25,17 @@ export class AccountService {
   }
 
   async createAccount(body: CreateAccountsDto) {
-    body.password = Hashing.hash(body.password);
+    await this.accountRepo.transaction(async () => {
+      body.password = Hashing.hash(body.password);
 
-    const exists = await this.accountRepo.exists({
-      $or: [{ username: body.username }, { displayName: body.displayName }],
+      const exists = await this.accountRepo.exists({
+        $or: [{ username: body.username }, { displayName: body.displayName }],
+      });
+      if (exists) throw new Exception('USERNAME_IS_EXIST');
+
+      const inserted = await this.accountRepo.insertOne(body);
+      if (!inserted) throw new Exception('SOMETHING_WRONG');
     });
-    if (exists) throw new Exception('USERNAME_IS_EXIST');
-
-    const inserted = await this.accountRepo.insertOne(body);
-    if (!inserted) throw new Exception('SOMETHING_WRONG');
   }
 
   async login(body: LoginDto) {
