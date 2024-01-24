@@ -9,24 +9,6 @@ services:
     ports:
       - 27017:27017
 
-  redis:
-    image: redis:alpine
-    container_name: redis
-    volumes:
-      - ./redis/databases:/data
-      - ./redis/config/redis.conf:/etc/redis/redis.conf
-    command:
-      [
-        'redis-server',
-        '/etc/redis/redis.conf',
-        '--requirepass',
-        '${REDIS_PASSWORD}',
-      ]
-    ports:
-      - 6379:6379
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-
   backend:
     build:
       context: .
@@ -41,7 +23,6 @@ services:
       start_period: 60s
     depends_on:
       - mongodb
-      - redis
     environment:
       - NODE_ENV=${NODE_ENV}
       - CORS_ORIGIN=${CORS_ORIGIN}

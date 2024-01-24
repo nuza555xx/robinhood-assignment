@@ -40,5 +40,5 @@ lerna-debug.log*
 
 # Yarn and NPM
 *-lock.json
-*lock
+*lock*
 
