@@ -25,7 +25,7 @@ const BootstrapApplication = async (): Promise<void> => {
 
   app.enableCors({
     origin: appConfig.cors,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
   app.useBodyParser('json', { bodyLimit: 50 * 1000 * 1024 });

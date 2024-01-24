@@ -2,7 +2,6 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import {
   appConfig,
-  cacheConfig,
   jwtConfig,
   mongooseConfig,
   rateLimitConfig,
@@ -14,23 +13,13 @@ import { ConfigProvider } from './config.eum';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [
-        mongooseConfig,
-        cacheConfig,
-        appConfig,
-        jwtConfig,
-        rateLimitConfig,
-      ],
+      load: [mongooseConfig, appConfig, jwtConfig, rateLimitConfig],
     }),
   ],
   providers: [
     {
       provide: ConfigProvider.APP,
       useFactory: appConfig,
-    },
-    {
-      provide: ConfigProvider.CACHE,
-      useFactory: cacheConfig,
     },
     {
       provide: ConfigProvider.JWT,
@@ -47,7 +36,6 @@ import { ConfigProvider } from './config.eum';
   ],
   exports: [
     ConfigProvider.APP,
-    ConfigProvider.CACHE,
     ConfigProvider.JWT,
     ConfigProvider.MONGOOSE,
     ConfigProvider.RATE_LIMIT,

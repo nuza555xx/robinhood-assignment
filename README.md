@@ -132,7 +132,7 @@ $ docker exec -it -w /root mongodb /bin/bash
 # Authenticate and connect to MongoDB
 $ mongosh --host CONTAINER_NAME --port PORT --username USERNAME --password PASSWORD --authenticationDatabase admin TARGET_DB
 
-# Seed admin password $12345678Ab bypass
+# Seed example password $12345678Ab bypass
 $ db.roles.insertOne({ "username" : "example", "password" : "$2b$10$T9HWCVpTNwTG09UM0RtpuOnLnvdBQXo/Sla4av1Bl6AUdj9SwhXfC", "displayName" : "example example", "createdAt" : "SEED", "updatedAt" : "SEED" })
 
 # Exit MongoDB

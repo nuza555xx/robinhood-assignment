@@ -9,39 +9,14 @@ services:
     ports:
       - 27017:27017
 
-  redis:
-    image: redis:alpine
-    container_name: redis
-    volumes:
-      - ./redis/databases:/data
-      - ./redis/config/redis.conf:/etc/redis/redis.conf
-    command:
-      [
-        'redis-server',
-        '/etc/redis/redis.conf',
-        '--requirepass',
-        '${REDIS_PASSWORD}',
-      ]
-    ports:
-      - 6379:6379
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     image: backend:latest
     container_name: backend
-    healthcheck:
-      test: curl --fail http://localhost:80/health || exit 1
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
     depends_on:
       - mongodb
-      - redis
     environment:
       - NODE_ENV=${NODE_ENV}
       - CORS_ORIGIN=${CORS_ORIGIN}
