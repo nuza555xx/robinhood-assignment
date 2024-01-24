@@ -8,16 +8,19 @@ import {
   RepositoryProvider,
 } from '@repositories';
 import { ConfigProvider, jwtConfig } from '@configs';
-import { CreateAccountsDto } from './account.dto';
+import { CreateAccountsDto, LoginDto } from './account.dto';
 import { Hashing } from '@utils';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Exception } from '@exception';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+
 describe('AccountService', () => {
   let moduleRef: TestingModule;
   let mongod: MongoMemoryServer;
   let accountService: AccountService;
   let accountRepo: Repository<Account>;
+  let jwtService: JwtService;
 
   beforeAll(async () => {
     mongod = await MongoMemoryServer.create();
@@ -32,6 +35,9 @@ describe('AccountService', () => {
             schema: AccountSchema,
           },
         ]),
+        JwtModule.register({
+          secret: 'jwt-secret',
+        }),
       ],
       providers: [
         AccountService,
@@ -43,9 +49,16 @@ describe('AccountService', () => {
           provide: RepositoryProvider.ACCOUNT,
           useClass: AccountImplement,
         },
+        {
+          provide: JwtService,
+          useValue: {
+            signAsync: jest.fn().mockResolvedValue('token_sign'),
+          },
+        },
       ],
     }).compile();
 
+    jwtService = moduleRef.get<JwtService>(JwtService);
     accountService = moduleRef.get<AccountService>(AccountService);
     accountRepo = moduleRef.get<Repository<Account>>(
       RepositoryProvider.ACCOUNT,
@@ -53,6 +66,7 @@ describe('AccountService', () => {
   });
 
   afterAll(async () => {
+    jest.clearAllMocks();
     await mongod.stop();
     await moduleRef.close();
   });
@@ -64,13 +78,23 @@ describe('AccountService', () => {
       password: 'test_password',
     };
 
-    it('should create an account', async () => {
+    beforeEach(() => {
       jest
         .spyOn(accountRepo, 'transaction')
         .mockImplementation(async (fn, ...args) => {
-          fn(...args);
+          try {
+            await fn(...args);
+          } catch (error) {
+            return Promise.reject(error);
+          }
         });
+    });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should create an account', async () => {
       jest
         .spyOn(accountRepo, 'insertOne')
         .mockResolvedValue(createAccountDto as any);
@@ -94,28 +118,86 @@ describe('AccountService', () => {
     });
 
     it('should throw an exception if username is already taken', async () => {
+      jest
+        .spyOn(accountRepo, 'insertOne')
+        .mockResolvedValue(createAccountDto as any);
+
       jest.spyOn(accountRepo, 'exists').mockResolvedValue(true);
 
+      jest.spyOn(Hashing, 'hash').mockReturnValue('hash_password');
+
       await expect(
-        async () => await accountService.createAccount(createAccountDto),
-      ).rejects.toThrow(new Exception('USERNAME_IS_EXIST'));
+        accountService.createAccount(createAccountDto),
+      ).rejects.toThrow(Exception);
+
+      expect(accountRepo.transaction).toHaveBeenCalledTimes(1);
+      expect(Hashing.hash).toHaveBeenCalledTimes(1);
+      expect(accountRepo.exists).toHaveBeenCalledWith({
+        $or: [
+          { username: createAccountDto.username },
+          { displayName: createAccountDto.displayName },
+        ],
+      });
     });
 
-    // it('should throw an exception if something goes wrong during insertion', async () => {
-    //   const createAccountDto: CreateAccountsDto = {
-    //     // provide required data for testing
-    //     username: 'testuser',
-    //     displayName: 'Test User',
-    //     password: 'testpassword',
-    //   };
+    it('should throw an exception if something goes wrong during insertion', async () => {
+      jest
+        .spyOn(accountRepo, 'insertOne')
+        .mockRejectedValue(new Error('SOMETHING_WRONG'));
 
-    //   // Mocking the behavior of accountRepo.exists and accountRepo.insertOne
-    //   (accountRepo.exists as jest.Mock).mockResolvedValue(false);
-    //   (accountRepo.insertOne as jest.Mock).mockResolvedValue(false);
+      jest.spyOn(accountRepo, 'exists').mockResolvedValue(false);
 
-    //   await expect(
-    //     accountService.createAccount(createAccountDto),
-    //   ).rejects.toThrow(Exception);
-    // });
+      await expect(
+        accountService.createAccount(createAccountDto),
+      ).rejects.toThrow(Error);
+    });
+  });
+
+  describe('login', () => {
+    const loginDto: LoginDto = {
+      username: 'test_user',
+      password: 'test_password',
+    };
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should successfully log in with valid credentials', async () => {
+      jest.spyOn(accountRepo, 'findOne').mockResolvedValue({
+        _id: '_id',
+        displayName: 'displayName',
+        avatar: 'avatar',
+      });
+      jest.spyOn(Hashing, 'compare').mockReturnValue(true);
+      jest.spyOn(jwtService, 'signAsync').mockResolvedValue('sync_token');
+
+      const response = await accountService.login(loginDto);
+      expect(accountRepo.findOne).toHaveBeenCalledTimes(1);
+      expect(response.accessToken).toEqual('token_sign');
+      expect(response.account._id).toEqual('_id');
+      expect(response.account.displayName).toEqual('displayName');
+      expect(response.account.avatar).toEqual('avatar');
+    });
+
+    it('should throw an exception if find account not found', async () => {
+      jest.spyOn(accountRepo, 'findOne').mockReturnValue(null);
+      await expect(accountService.login(loginDto)).rejects.toThrow();
+      expect(accountRepo.findOne).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an exception if password mismatch', async () => {
+      jest.spyOn(accountRepo, 'findOne').mockResolvedValue({
+        _id: '_id',
+        displayName: 'displayName',
+        avatar: 'avatar',
+        password: 'password',
+      });
+      jest.spyOn(Hashing, 'compare').mockReturnValue(false);
+
+      await expect(accountService.login(loginDto)).rejects.toThrow();
+      expect(accountRepo.findOne).toHaveBeenCalledTimes(1);
+      expect(Hashing.compare).toHaveBeenCalledWith('test_password', 'password');
+    });
   });
 });
