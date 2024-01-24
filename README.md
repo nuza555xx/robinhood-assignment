@@ -1,6 +1,6 @@
 # Docs website
 
-This site was built using [GitHub Pages](https://github.com/nuza555xx/robinhood-assignment/).
+This site was built using [Documentations](https://nuza555xx.github.io/robinhood-assignment/).
 
 # ER Diagram for Application
 
@@ -126,14 +126,13 @@ $ docker-compose up -d
 
 ```bash
 # Run Docker Swarm or MongoDB container
-$ docker exec mongodb
 $ docker exec -it -w /root mongodb /bin/bash
 
 # Authenticate and connect to MongoDB
 $ mongosh --host CONTAINER_NAME --port PORT --username USERNAME --password PASSWORD --authenticationDatabase admin TARGET_DB
 
 # Seed example password $12345678Ab bypass
-$ db.roles.insertOne({ "username" : "example", "password" : "$2b$10$T9HWCVpTNwTG09UM0RtpuOnLnvdBQXo/Sla4av1Bl6AUdj9SwhXfC", "displayName" : "example example", "createdAt" : "SEED", "updatedAt" : "SEED" })
+$ db.accounts.insertOne({ "username" : "example", "password" : "$2b$10$T9HWCVpTNwTG09UM0RtpuOnLnvdBQXo/Sla4av1Bl6AUdj9SwhXfC", "displayName" : "example example", "createdAt" : "SEED", "updatedAt" : "SEED" })
 
 # Exit MongoDB
 $ exit
