@@ -110,7 +110,7 @@ $ docker build -t backend:latest  -f Dockerfile .
 
 ```
 
-## Docker Swarm Deployment
+## Docker Deployment
 
 - [ ] Build the app to docker image
 
